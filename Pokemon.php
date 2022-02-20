@@ -7,8 +7,8 @@ class Pokemon
     private int $number;
     private string $name;
     private string $description;
-    private int $type1;
-    private int $type2;
+    private string $type1;
+    private $type2;
 
     public function __construct(array $datas)
     {
@@ -58,6 +58,11 @@ class Pokemon
     }
 
     //Setters
+    public function setId($id)
+    {
+            $this->id = $id;
+    }
+
     public function setNumber($number)
     {
         if (is_int($number) < 800) {

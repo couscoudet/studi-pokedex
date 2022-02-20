@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    <title>Pokedex Studi</title>
+    <title>Pokedex Studi - Créer un Pokemon</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -35,29 +35,25 @@
 <?php
 require_once("PokemonsManager.php");
 $manager = new PokemonsManager();
-$pokemons = $manager->getAll();
 ?>
 
-<main class="container">
-    <a href="./create.php" class="btn btn-primary">Créer un pokemon</a>
-    <section class="d-flex flex-wrap justify-content-center">
-        <?php
-        foreach($pokemons as $pokemon):
-        ?>
-
-        <div class="card m-5" style="width: 18rem;">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title"><?= $pokemon->getNumber() ?># <?= $pokemon->getName() ?></h5>
-            <p class="card-text"><?= $pokemon->getDescription() ?></p>
-            <a href="#" class="btn btn-success">Modifier</a>
-        </div>
-        </div>
-
-        <?php 
-        endforeach ?>
-        
-    </section>
+<main class="container d-flex justify-content-center">
+    <form method="post" enctype="multipart/form-data>
+        <label for="number" class="form-label">Numéro</label>
+        <input type="number" name="number" class="form-control" id="number" placeholder="Numéro du Pokémon" min="1" max="800" required><br>
+        <label for="name" class="form-label">Nom</label>
+        <input type="text" name="name" id="name" class="form-control" placeholder="Nom du Pokémon" required><br>
+        <label for="description" class="form-label">Description</label>
+        <textarea name="description" id="description" class="form-control" placeholder="Tapez la description" required></textarea><br>
+        <!-- <label for="type1" class="form-label">Type (1)</label>
+        <select name="type1" id="type1" class="form-select" required><br>
+        <option>
+        <label for="type2" class="form-label">Type (2)</label>
+        <select name="type2" id="type2" class="form-select"><br> -->
+        <label for="image" class="form-label">Télécharger l'image : </label>
+        <input type="file" name="image" id="image" class="form-control">
+        <input type="submit" value="Créer" class="form-control mt-5 mb-5 btn btn-success">
+    </form>
 </main>
 </body>
 </html>
