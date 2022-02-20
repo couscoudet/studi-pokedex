@@ -9,6 +9,7 @@ class Pokemon
     private string $description;
     private string $type1;
     private $type2;
+    private $image;
 
     public function __construct(array $datas)
     {
@@ -90,5 +91,25 @@ class Pokemon
     public function setType2($type2)
     {
         $this->type2 = $type2;
+    }
+
+    /**
+     * Get the value of image
+     */ 
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * Set the value of image
+     *
+     * @return  self
+     */ 
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
     }
 }

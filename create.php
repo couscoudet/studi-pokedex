@@ -35,6 +35,21 @@
 <?php
 require_once("PokemonsManager.php");
 $manager = new PokemonsManager();
+require_once("TypesManager.php");
+$typeManager = new TypesManager();
+$types = $typeManager->getAll();
+if ($_POST) {
+    $number = $_POST['number'];
+    $name = $_POST['name'];
+    $description = $_POST['description'];
+    $type1 = $_POST['type1'];
+    $type2 = $_POST['type2'];
+    if ($_FILES['image']['size'] < 2000000) {
+        require_once("ImagesManager.php");
+        $imagesManager = new ImagesManager();
+        //pdo = data
+    }
+}
 ?>
 
 <main class="container d-flex justify-content-center">
@@ -45,11 +60,20 @@ $manager = new PokemonsManager();
         <input type="text" name="name" id="name" class="form-control" placeholder="Nom du Pokémon" required><br>
         <label for="description" class="form-label">Description</label>
         <textarea name="description" id="description" class="form-control" placeholder="Tapez la description" required></textarea><br>
-        <!-- <label for="type1" class="form-label">Type (1)</label>
+        <label for="type1" class="form-label">Type (1)</label>
         <select name="type1" id="type1" class="form-select" required><br>
-        <option>
+            <option value="">--</option>
+            <?php foreach($types as $type) {
+                echo "<option value='". $type->getId() ."' style='background:". $type->getColor() ."'>".$type->getName()."</option>";
+            }  ?>
+        </select>
         <label for="type2" class="form-label">Type (2)</label>
-        <select name="type2" id="type2" class="form-select"><br> -->
+        <select name="type2" id="type2" class="form-select"><br>
+            <option value="">--</option>
+            <?php foreach ($types as $type): ?>
+            <option value="<?= $type->getId() ?>"><?= $type->getName(); ?></option>
+            <?php endforeach ?>
+        </select>
         <label for="image" class="form-label">Télécharger l'image : </label>
         <input type="file" name="image" id="image" class="form-control">
         <input type="submit" value="Créer" class="form-control mt-5 mb-5 btn btn-success">

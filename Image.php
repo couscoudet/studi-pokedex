@@ -1,8 +1,9 @@
 <?php
- class Type {
+
+ class Image {
      private $id;
      private $name;
-     private $color;
+     private $path;
 
      public function __construct(array $data)
      {
@@ -17,7 +18,7 @@
                 $this->$method($value);
             }
         }
-     }
+    }
      /**
       * Get the value of id
       */ 
@@ -59,22 +60,22 @@
      }
 
      /**
-      * Get the value of color
+      * Get the value of path
       */ 
-     public function getColor()
+     public function getPath()
      {
-          return $this->color;
+          return $this->path;
      }
 
      /**
-      * Set the value of color
+      * Set the value of path
       *
       * @return  self
       */ 
-     public function setColor($color)
+     public function setPath($path)
      {
-          $this->color = $color;
+          $this->path = $path;
 
           return $this;
      }
- }
+     }
