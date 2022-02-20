@@ -10,6 +10,22 @@ class Pokemon
     private int $type1;
     private int $type2;
 
+    public function __construct(array $datas)
+    {
+        $this->hydrate($datas);
+    }
+
+    //Methode d'hydratation : donner des valeurs aux attributs
+    public function hydrate(array $datas): void
+    {
+        foreach($datas as $key => $value) {
+            $method = "set" . ucfirst($key);
+            if (method_exists($this,$method)){
+                $this->$method($value);
+            }
+        }
+    }
+
     //getters pour atteindre les propriétés privées depuis l'extérieur de la classe
     public function getId() 
     {
