@@ -38,6 +38,12 @@ class ImagesManager
 
     }
 
+    public function getLastImageId() {
+        $req = $this->db->query("SELECT * FROM `image` ORDER BY id DESC LIMIT 1");
+        $datas = $req->fetch()["id"];
+        return $datas;
+    }
+
     public function update(Image $image)
     {
         $req = $this->db->prepare("UPDATE `image` SET name = :name, path = :path");

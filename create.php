@@ -37,23 +37,71 @@ require_once("PokemonsManager.php");
 $manager = new PokemonsManager();
 require_once("TypesManager.php");
 $typeManager = new TypesManager();
+require_once("ImagesManager.php");
+$imagesManager = new ImagesManager();
+var_dump(intval($imagesManager->getLastImageId()));
 $types = $typeManager->getAll();
+$imageExtensions = ['image/jpeg'=>'jpg', 'image/png'=>'png', 'image/gif'=>'gif'];
 if ($_POST) {
     $number = $_POST['number'];
     $name = $_POST['name'];
     $description = $_POST['description'];
     $type1 = $_POST['type1'];
     $type2 = $_POST['type2'];
-    if ($_FILES['image']['size'] < 2000000) {
-        require_once("ImagesManager.php");
-        $imagesManager = new ImagesManager();
-        //pdo = data
+    if (isset($_FILES['image']) && !$_FILES['image']['error']) {
+        if ($_FILES['image']['size'] < 2000000) {
+
+            //A MODIFIER : controler avec le mimetype et non le pathinfo
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->file($_FILES['image']['tmp_name']);
+            if (array_key_exists($mimeType, $imageExtensions)) {
+                if(!is_dir('image')) {
+                    try {
+                        mkdir('image');
+                    } catch(Exception $e) {
+                        echo 'une erreur est survenue : ' . $e->getMessage();
+                    }
+                }
+
+                //modifier le nom de l'image sha1_file(string $filename, bool $binary = false): string|false
+                $imageName = sha1_file($_FILES['image']['tmp_name']).".".$imageExtensions[$mimeType];
+                //si le nom de l'image existe déja dans la base, l'image a déja été téléchargé
+                $imageData = ['name'=>$imageName, 'path'=>'./image/'];
+                $image = new Image($imageData);
+                $imagesManager->create($image);
+                try {
+                    move_uploaded_file($_FILES['image']['tmp_name'], $image->getPath().'/'.$image->getName());
+                } catch(Exception $e) {
+                    echo 'une erreur est survenue : ' . $e->getMessage();
+                }
+            }
+            else {
+                echo "L'extension du fichier n'est pas acceptée";
+            }
+        }
+        else {
+            echo 'le fichier est trop lourd';
+        }
     }
+    else {
+        echo "une erreur est survenue lors de l'envoi du fichier";
+    }
+$pokData = [
+    'number'=>$_POST['number'],
+    'name'=>$_POST['name'],
+    'description'=>$_POST['description'],
+    'type1'=>$_POST['type1'],
+    'type2'=>$_POST['type2'] === "null" ? null : $_POST['type2'],
+    'image'=>intval($imagesManager->getLastImageId())
+];
+$pokemon = new Pokemon($pokData);
+$manager->create($pokemon);
 }
+
 ?>
 
 <main class="container d-flex justify-content-center">
-    <form method="post" enctype="multipart/form-data>
+    <form action="create.php" method="post" enctype="multipart/form-data">
         <label for="number" class="form-label">Numéro</label>
         <input type="number" name="number" class="form-control" id="number" placeholder="Numéro du Pokémon" min="1" max="800" required><br>
         <label for="name" class="form-label">Nom</label>
@@ -62,14 +110,14 @@ if ($_POST) {
         <textarea name="description" id="description" class="form-control" placeholder="Tapez la description" required></textarea><br>
         <label for="type1" class="form-label">Type (1)</label>
         <select name="type1" id="type1" class="form-select" required><br>
-            <option value="">--</option>
+            <option value="null">--</option>
             <?php foreach($types as $type) {
                 echo "<option value='". $type->getId() ."' style='background:". $type->getColor() ."'>".$type->getName()."</option>";
             }  ?>
         </select>
         <label for="type2" class="form-label">Type (2)</label>
         <select name="type2" id="type2" class="form-select"><br>
-            <option value="">--</option>
+            <option value="null">--</option>
             <?php foreach ($types as $type): ?>
             <option value="<?= $type->getId() ?>"><?= $type->getName(); ?></option>
             <?php endforeach ?>
